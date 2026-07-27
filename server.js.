@@ -1,0 +1,44 @@
+const express = require("express");
+const cors = require("cors");
+const multer = require("multer");
+
+const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.use(cors());
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({
+    status: "online",
+    message: "LOOKMAX AI backend is running!"
+  });
+});
+
+app.post("/analyze", upload.single("photo"), async (req, res) => {
+
+  if (!req.file) {
+    return res.status(400).json({
+      error: "No photo uploaded"
+    });
+  }
+
+  res.json({
+    success: true,
+    message: "Photo received successfully.",
+    analysis: {
+      overallScore: 82,
+      faceShape: "Oval",
+      hairstyle: "Textured Crop / Mid Fade",
+      beard: "Short Boxed Beard",
+      grooming: "Focus on skincare and facial hair grooming"
+    }
+  });
+
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`LOOKMAX AI backend running on port ${PORT}`);
+});
